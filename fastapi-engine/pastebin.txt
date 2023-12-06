@@ -1,0 +1,49 @@
+@app.get("/users/")
+async def get_users():
+    users = db["users"]
+    print(f"Users: {users}")
+    users = users.find({})
+
+    # return Profile(users=await users.find().to_list(1000))
+    return {"users": users}
+
+    # users_collection = db.get_collection("users")
+    # users = users_collection.find({})
+    # return Profile(users=users)
+
+    # users_collection = db.get_collection("users")
+    # users = users_collection.find({})
+
+    # # Assuming `users` is a list of dictionaries with keys matching the Profile model's fields
+    # profiles = [Profile(**user) for user in users]
+
+    # return profiles
+
+class UserInterests(Document):
+    user_id = StringField(primary_key=True)
+    interests = StringField()
+
+
+class EventHashtags(Document):
+    event_id = StringField(primary_key=True)
+    hashtags = StringField()
+
+
+class Profile(BaseModel):
+    firstName: Optional[str]
+    lastName: Optional[str]
+    username: str = Field(..., min_length=5, max_length=255)
+    password: str = Field(..., min_length=8, max_length=1024)
+    email: str = Field(..., min_length=5, max_length=255)
+    intake: int
+    faculty: str
+    eventId: Optional[List[str]]
+    date: Optional[str]
+    isAdmin: bool
+    favouriteEventIds: Optional[List[str]]
+
+    class Config:
+        orm_mode = True
+
+
+# client = motor.motor_asyncio.AsyncIOMotorClient(os.getenv("MONGO_URI_STRING"))
