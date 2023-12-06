@@ -18,16 +18,19 @@ users_collection = db.get_collection("users")
 events_collection = db.get_collection("events")
 
 
+# root
 @router.get("/", tags=["ROOT"])
 async def root() -> dict:
     return {"message": "Hello World!"}
 
 
+# check engine functionality (not necessary)
 @router.get("/engine/")
 async def engine() -> dict:
     return {"message": "Hello from the Recommender engine!"}
 
 
+# get all users from database
 @router.get("/users/")
 async def get_users():
     global users_collection
@@ -35,6 +38,7 @@ async def get_users():
     return users
 
 
+# get all events from database
 @router.get("/events/")
 async def get_users():
     global events_collection
@@ -42,6 +46,7 @@ async def get_users():
     return events
 
 
+# handle like event
 @router.get("/like-event/{user_id}/{event_id}/")
 async def like_event(user_id: str, event_id: str):
     global users_collection
