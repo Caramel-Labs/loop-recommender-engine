@@ -14,4 +14,6 @@ class User(BaseModel):
 # event model
 class Event(BaseModel):
     name: str
+    society: str
+    date: str
     hashtags: List[str]

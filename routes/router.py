@@ -146,7 +146,20 @@ async def get_recommendations(user_id):
     recommended_event_ids = [str(events[i]["_id"]) for i in top_5_indices]
     print(f"Recommended Event IDs: {recommended_event_ids}")
 
+    # get array of recommended events
+    recommended_events = [
+        {
+            "_id": str(events[i]["_id"]),
+            "name": events[i].get("name"),
+            "society": events[i].get("society"),
+            "date": events[i].get("date"),
+            "hashtags": events[i].get("hashtags"),
+        }
+        for i in top_5_indices
+    ]
+    print(f"Recommended Events: {recommended_events}")
+
     return {
         "message": "Recommendations calculated",
-        "recommendations": recommended_event_ids,
+        "recommendations": recommended_events,
     }

@@ -22,6 +22,8 @@ def event_individual_serial(event) -> dict:
     return {
         "id": str(event["_id"]),
         "name": event["name"],
+        "society": event["society"],
+        "date": event["date"],
         "hashtags": event["hashtags"],
     }
 
