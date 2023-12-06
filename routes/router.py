@@ -7,8 +7,7 @@ from db.schemas import (
     user_individual_serial,
     user_list_serial,
 )
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
+import difflib
 
 router = APIRouter()
 
@@ -122,7 +121,18 @@ async def get_recommendations(user_id):
     print(f"{first_name}'s interests: {interests}")
 
     # get events from database
-    events = list(events_collection.find({}, {"_id": 1, "hashtags": 1}))
+    events = list(
+        events_collection.find(
+            {},
+            {
+                "_id": 1,
+                "hashtags": 1,
+                "name": 1,
+                "society": 1,
+                "date": 1,
+            },
+        )
+    )
     print(f"Events: {events}")
 
     # extract hashtags for each event
@@ -130,11 +140,9 @@ async def get_recommendations(user_id):
 
     # calculate cosine similarity scores
     scores = []
-    user_interests = np.array(interests).reshape(1, -1)
     for event_tags in event_hashtags:
-        event_tags = np.array(event_tags).reshape(1, -1)
-        score = cosine_similarity(user_interests, event_tags)
-        scores.append(score[0][0])
+        score = difflib.SequenceMatcher(None, interests, event_tags).ratio()
+        scores.append(score)
 
     # get top event indices based on scores
     number_of_recommendations = 5
@@ -150,7 +158,7 @@ async def get_recommendations(user_id):
     recommended_events = [
         {
             "_id": str(events[i]["_id"]),
-            "name": events[i].get("name"),
+            "name": str(events[i].get("name")),
             "society": events[i].get("society"),
             "date": events[i].get("date"),
             "hashtags": events[i].get("hashtags"),

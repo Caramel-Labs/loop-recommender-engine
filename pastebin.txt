@@ -62,3 +62,10 @@ class Profile(BaseModel):
     print(f"User interests: {interests}")
     hashtags = event.__getattribute__("lastName")
     print(f"Event hashtags: {hashtags}")
+
+
+# user_interests = np.array(interests).reshape(1, -1)
+    # for event_tags in event_hashtags:
+    #     event_tags = np.array(event_tags).reshape(1, -1)
+    #     score = cosine_similarity(user_interests, event_tags)
+    #     scores.append(score[0][0])
