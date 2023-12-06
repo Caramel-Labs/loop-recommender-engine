@@ -5,5 +5,11 @@ from pydantic import BaseModel, Field
 
 class User(BaseModel):
     firstName: str
+    username: str
     lastName: str
-    isAdmin: bool
+    interests: List[str]
+
+
+class Event(BaseModel):
+    name: str
+    hashtags: List[str]

@@ -47,3 +47,18 @@ class Profile(BaseModel):
 
 
 # client = motor.motor_asyncio.AsyncIOMotorClient(os.getenv("MONGO_URI_STRING"))
+
+
+# check whether data comes from request URI
+    print(f"User is {user_id}")
+    print(f"Event is {event_id}")
+
+    # get relevant user and event from database
+    user = users_collection.find_one({"_id": user_id})
+    user = individual_serial(users_collection.find())
+    event = events_collection.find_one({"_id": event_id})
+
+    interests = user.__getattribute__("firstName")
+    print(f"User interests: {interests}")
+    hashtags = event.__getattribute__("lastName")
+    print(f"Event hashtags: {hashtags}")
