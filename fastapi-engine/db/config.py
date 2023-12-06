@@ -20,7 +20,7 @@ def remote_mongodb():
     except Exception as e:
         print(e)
 
-    # setup the database
+    # select database from cluster
     db = client.test
 
     return db

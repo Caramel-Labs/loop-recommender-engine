@@ -3,6 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
+# user model
 class User(BaseModel):
     firstName: str
     username: str
@@ -10,6 +11,7 @@ class User(BaseModel):
     interests: List[str]
 
 
+# event model
 class Event(BaseModel):
     name: str
     hashtags: List[str]

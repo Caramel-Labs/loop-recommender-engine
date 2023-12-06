@@ -1,3 +1,6 @@
+# NOTE
+# This file is not necessary
+
 from pydantic import BaseModel
 
 
