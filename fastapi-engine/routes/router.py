@@ -7,6 +7,8 @@ from db.schemas import (
     user_individual_serial,
     user_list_serial,
 )
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 router = APIRouter()
 
@@ -46,9 +48,12 @@ async def get_users():
     return events
 
 
-# handle like event
+# handle liking and bookmarking events
+@router.put("/like-event/{user_id}/{event_id}/")
+@router.put("/bookmark-event/{user_id}/{event_id}/")
 @router.get("/like-event/{user_id}/{event_id}/")
-async def like_event(user_id: str, event_id: str):
+@router.get("/bookmark-event/{user_id}/{event_id}/")
+async def like_or_bookmark_event(user_id: str, event_id: str):
     global users_collection
     global events_collection
 
@@ -102,3 +107,46 @@ def update_user_interests(interests, hashtags: list) -> list:
         print("Less than 20 interests are available")
 
     return interests
+
+
+# get recommendations for user
+@router.get("/get-recommendations/{user_id}/")
+async def get_recommendations(user_id):
+    global users_collection
+    global events_collection
+
+    # get user from database
+    user = user_individual_serial(users_collection.find_one({"username": user_id}))
+    first_name = user["firstName"]
+    interests = user["interests"]
+    print(f"{first_name}'s interests: {interests}")
+
+    # get events from database
+    events = list(events_collection.find({}, {"_id": 1, "hashtags": 1}))
+    print(f"Events: {events}")
+
+    # extract hashtags for each event
+    event_hashtags = [event["hashtags"] for event in events]
+
+    # calculate cosine similarity scores
+    scores = []
+    user_interests = np.array(interests).reshape(1, -1)
+    for event_tags in event_hashtags:
+        event_tags = np.array(event_tags).reshape(1, -1)
+        score = cosine_similarity(user_interests, event_tags)
+        scores.append(score[0][0])
+
+    # get top event indices based on scores
+    number_of_recommendations = 5
+    top_5_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[
+        :number_of_recommendations
+    ]
+
+    # get IDs of recommended events
+    recommended_event_ids = [str(events[i]["_id"]) for i in top_5_indices]
+    print(f"Recommended Event IDs: {recommended_event_ids}")
+
+    return {
+        "message": "Recommendations calculated",
+        "recommendations": recommended_event_ids,
+    }
