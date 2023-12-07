@@ -41,23 +41,23 @@ async def get_users():
 
 # get all events from database
 @router.get("/events/")
-async def get_users():
+async def get_events():
     global events_collection
     events = event_list_serial(events_collection.find())
     return events
 
 
 # handle liking and bookmarking events
-@router.put("/like-event/{user_id}/{event_id}/")
-@router.put("/bookmark-event/{user_id}/{event_id}/")
-@router.get("/like-event/{user_id}/{event_id}/")
-@router.get("/bookmark-event/{user_id}/{event_id}/")
-async def like_or_bookmark_event(user_id: str, event_id: str):
+@router.put("/like-event/{username}/{event_id}/")
+@router.put("/bookmark-event/{username}/{event_id}/")
+@router.get("/like-event/{username}/{event_id}/")
+@router.get("/bookmark-event/{username}/{event_id}/")
+async def like_or_bookmark_event(username: str, event_id: str) -> dict:
     global users_collection
     global events_collection
 
     # get user from database
-    user = user_individual_serial(users_collection.find_one({"username": user_id}))
+    user = user_individual_serial(users_collection.find_one({"username": username}))
     first_name = user["firstName"]
     interests = user["interests"]
     print(f"{first_name}'s interests: {interests}")
@@ -80,7 +80,7 @@ async def like_or_bookmark_event(user_id: str, event_id: str):
 
     # write new interests to database
     users_collection.update_one(
-        {"username": user_id},
+        {"username": username},
         {
             "$set": {"interests": interests},
         },
@@ -110,7 +110,7 @@ def update_user_interests(interests, hashtags: list) -> list:
 
 # get recommendations for user
 @router.get("/get-recommendations/{user_id}/")
-async def get_recommendations(user_id):
+async def get_recommendations(user_id) -> dict:
     global users_collection
     global events_collection
 

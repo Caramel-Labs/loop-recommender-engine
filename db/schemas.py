@@ -4,10 +4,10 @@
 def user_individual_serial(user) -> dict:
     return {
         "id": str(user["_id"]),
-        "firstName": user["firstName"],
-        "username": user["username"],
-        "lastName": user["lastName"],
-        "interests": user["interests"],
+        "firstName": user.get("firstName"),
+        "username": user.get("username"),
+        "lastName": user.get("lastName"),
+        "interests": user.get("interests"),
     }
 
 
@@ -21,12 +21,12 @@ def user_list_serial(users) -> list:
 def event_individual_serial(event) -> dict:
     return {
         "id": str(event["_id"]),
-        "name": event["name"],
-        "society": event["society"],
-        "date": event["date"],
-        "hashtags": event["hashtags"],
+        "name": event.get("name"),
+        "society": event.get("society"),
+        "date": event.get("date"),
+        "hashtags": event.get("hashtags"),
     }
 
 
 def event_list_serial(events) -> list:
-    return (user_individual_serial(event) for event in events)
+    return (event_individual_serial(event) for event in events)
