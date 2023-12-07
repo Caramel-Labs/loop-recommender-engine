@@ -9,6 +9,7 @@ from db.schemas import (
 )
 import difflib
 
+# setup router
 router = APIRouter()
 
 # setup database
