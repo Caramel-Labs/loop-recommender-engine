@@ -21,6 +21,6 @@ def remote_mongodb():
         print(e)
 
     # select database from cluster
-    db = client.Loop
+    db = client.test
 
     return db
