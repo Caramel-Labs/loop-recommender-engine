@@ -10,6 +10,7 @@ app.include_router(router)
 
 # define allowed origins for CORS
 origins = [
+    "*",
     "http://localhost",
     "http://localhost:3000",
     "http://localhost:3001",
