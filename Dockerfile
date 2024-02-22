@@ -1,6 +1,6 @@
 FROM python:3-alpine AS builder
  
-WORKDIR /app
+WORKDIR /
  
 RUN python3 -m venv venv
 ENV VIRTUAL_ENV=/app/venv
@@ -12,7 +12,7 @@ RUN pip install -r requirements.txt
 # Stage 2
 FROM python:3-alpine AS runner
  
-WORKDIR /app
+WORKDIR /
  
 COPY --from=builder /app/venv venv
 COPY main.py main.py
